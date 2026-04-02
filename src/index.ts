@@ -147,6 +147,8 @@ function okResult(data: unknown) {
   return { content: [{ type: 'text' as const, text }] };
 }
 
+const VTODO_FILTER = [{ 'comp-filter': { _attributes: { name: 'VCALENDAR' }, 'comp-filter': { _attributes: { name: 'VTODO' } } } }];
+
 // ---- Server factory ----
 
 function makeServer(dav: CalDavClient): McpServer {
@@ -326,7 +328,7 @@ function makeServer(dav: CalDavClient): McpServer {
 
       const todos = [];
       for (const cal of targets) {
-        const objects = await dav.fetchCalendarObjects({ calendar: cal });
+        const objects = await dav.fetchCalendarObjects({ calendar: cal, filters: VTODO_FILTER });
         for (const obj of objects) {
           const data = icsData(obj);
           if (!data.includes('BEGIN:VTODO')) continue;
@@ -395,7 +397,7 @@ function makeServer(dav: CalDavClient): McpServer {
       const calendar = findCalendar(calendars, calendarUrl);
       if (!calendar) return errorResult(`Calendar not found: ${calendarUrl}`);
 
-      const objects = await dav.fetchCalendarObjects({ calendar });
+      const objects = await dav.fetchCalendarObjects({ calendar, filters: VTODO_FILTER });
       const obj = findObjectByUid(objects, uid);
       if (!obj) return errorResult(`Todo not found: ${uid}`);
 
@@ -433,7 +435,7 @@ function makeServer(dav: CalDavClient): McpServer {
       const calendar = findCalendar(calendars, calendarUrl);
       if (!calendar) return errorResult(`Calendar not found: ${calendarUrl}`);
 
-      const objects = await dav.fetchCalendarObjects({ calendar });
+      const objects = await dav.fetchCalendarObjects({ calendar, filters: VTODO_FILTER });
       const obj = findObjectByUid(objects, uid);
       if (!obj) return errorResult(`Todo not found: ${uid}`);
 
