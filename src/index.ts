@@ -322,7 +322,7 @@ function makeServer(dav: CalDavClient): McpServer {
       const calendars = await fetchAllCalendars(dav);
       const targets = calendarUrl
         ? calendars.filter(c => c.url === calendarUrl)
-        : calendars.filter(c => !c.components?.length || c.components.includes('VTODO'));
+        : calendars.filter(c => !c.components || c.components.includes('VTODO'));
 
       const todos = [];
       for (const cal of targets) {
