@@ -24,6 +24,7 @@ export function startHttpServer(makeServer: ServerFactory, dav: CalDavClient, co
   const provider = new SimpleOAuthProvider(config.adminPassword);
 
   const app = createMcpExpressApp({ host: '0.0.0.0' });
+  app.set('trust proxy', 1);
 
   // OAuth endpoints: /.well-known/oauth-authorization-server, /authorize, /token, /register, /revoke
   // Also sets up /.well-known/oauth-protected-resource/mcp
